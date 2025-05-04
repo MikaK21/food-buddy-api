@@ -1,9 +1,10 @@
-package com.foodbuddy.food_buddy.adapter.mapper;
+package com.foodbuddy.food_buddy_api.adapter.mapper;
 
-import com.foodbuddy.food_buddy.adapter.dto.ShoppingListItemDTO;
-import com.foodbuddy.food_buddy.adapter.dto.ShoppingListResponseDTO;
-import com.foodbuddy.food_buddy.domain.model.ShoppingList;
-import com.foodbuddy.food_buddy.domain.model.ShoppingListItem;
+import com.foodbuddy.food_buddy_api.adapter.dto.ShoppingListItemDTO;
+import com.foodbuddy.food_buddy_api.adapter.dto.ShoppingListResponseDTO;
+import com.foodbuddy.food_buddy_api.domain.model.MyUser;
+import com.foodbuddy.food_buddy_api.domain.model.ShoppingList;
+import com.foodbuddy.food_buddy_api.domain.model.ShoppingListItem;
 
 public class ShoppingListMapper {
 

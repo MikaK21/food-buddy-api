@@ -1,4 +1,4 @@
-package com.foodbuddy.food_buddy.adapter.dto;
+package com.foodbuddy.food_buddy_api.adapter.dto;
 
 import lombok.Getter;
 import lombok.Setter;
