@@ -1,13 +1,8 @@
 package com.foodbuddy.food_buddy_api.application.service;
 
-import com.foodbuddy.food_buddy_api.domain.model.MyUser;
-import com.foodbuddy.food_buddy_api.domain.model.Shop;
-import com.foodbuddy.food_buddy_api.domain.model.ShoppingList;
-import com.foodbuddy.food_buddy_api.domain.model.ShoppingListItem;
-import com.foodbuddy.food_buddy_api.domain.repository.MyUserRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.ShopRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.ShoppingListItemRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.ShoppingListRepository;
+import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
+import com.foodbuddy.food_buddy_api.domain.model.*;
+import com.foodbuddy.food_buddy_api.domain.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -17,23 +12,19 @@ import java.util.List;
 public class ShoppingListService {
 
     private final ShoppingListRepository listRepository;
-    private final MyUserRepository userRepository;
-    private final ShopRepository shopRepository;
     private final ShoppingListItemRepository itemRepository;
+    private final DomainLookupService domainLookupService;
 
     public ShoppingListService(ShoppingListRepository listRepository,
-                               MyUserRepository userRepository,
-                               ShopRepository shopRepository,
-                               ShoppingListItemRepository itemRepository) {
+                               ShoppingListItemRepository itemRepository, DomainLookupService domainLookupService) {
         this.listRepository = listRepository;
-        this.userRepository = userRepository;
-        this.shopRepository = shopRepository;
         this.itemRepository = itemRepository;
+        this.domainLookupService = domainLookupService;
     }
 
     @Transactional
     public ShoppingList createList(String listName, String username) {
-        MyUser user = getUser(username);
+        MyUser user = domainLookupService.getUserOrThrow(username);
         ShoppingList list = new ShoppingList();
         list.setName(listName);
         list.setLeader(user);
@@ -44,8 +35,8 @@ public class ShoppingListService {
 
     @Transactional
     public void renameList(Long listId, String username, String newName) {
-        ShoppingList list = getList(listId);
-        MyUser user = getUser(username);
+        ShoppingList list = domainLookupService.getShoppingListOrThrow(listId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!list.isLeader(user)) {
             throw new RuntimeException("Only the leader can rename the list.");
@@ -57,8 +48,8 @@ public class ShoppingListService {
 
     @Transactional
     public void deleteList(Long listId, String username) {
-        ShoppingList list = getList(listId);
-        MyUser user = getUser(username);
+        ShoppingList list = domainLookupService.getShoppingListOrThrow(listId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
         if (!list.isLeader(user)) {
             throw new RuntimeException("Only the leader can delete the list.");
         }
@@ -67,9 +58,9 @@ public class ShoppingListService {
 
     @Transactional
     public void addMember(Long listId, String username, String newMemberUsername) {
-        ShoppingList list = getList(listId);
-        MyUser leader = getUser(username);
-        MyUser newMember = getUser(newMemberUsername);
+        ShoppingList list = domainLookupService.getShoppingListOrThrow(listId);
+        MyUser leader = domainLookupService.getUserOrThrow(username);
+        MyUser newMember = domainLookupService.getUserOrThrow(newMemberUsername);
 
         if (!list.isLeader(leader)) {
             throw new RuntimeException("Only the leader can add members.");
@@ -80,9 +71,9 @@ public class ShoppingListService {
 
     @Transactional
     public void removeMember(Long listId, String username, String targetUsername) {
-        ShoppingList list = getList(listId);
-        MyUser leader = getUser(username);
-        MyUser target = getUser(targetUsername);
+        ShoppingList list = domainLookupService.getShoppingListOrThrow(listId);
+        MyUser leader = domainLookupService.getUserOrThrow(targetUsername);
+        MyUser target = domainLookupService.getUserOrThrow(targetUsername);
 
         if (!list.isLeader(leader)) {
             throw new RuntimeException("Only the leader can remove members.");
@@ -94,14 +85,14 @@ public class ShoppingListService {
 
     @Transactional
     public ShoppingListItem addItem(Long listId, String username, String name, int amount, Long shopId) {
-        ShoppingList list = getList(listId);
-        MyUser user = getUser(username);
+        ShoppingList list = domainLookupService.getShoppingListOrThrow(listId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!list.hasMember(user)) {
             throw new RuntimeException("Not authorized to modify this list.");
         }
 
-        Shop shop = (shopId != null) ? getShop(shopId) : null;
+        Shop shop = (shopId != null) ? domainLookupService.getShopOrThrow(shopId) : null;
 
         ShoppingListItem item = new ShoppingListItem();
         item.setName(name);
@@ -114,9 +105,9 @@ public class ShoppingListService {
 
     @Transactional
     public void removeItem(Long itemId, String username) {
-        ShoppingListItem item = getItem(itemId);
+        ShoppingListItem item = domainLookupService.getShoppingListItemOrThrow(itemId);
         ShoppingList list = item.getShoppingList();
-        MyUser user = getUser(username);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!list.hasMember(user)) {
             throw new RuntimeException("Not authorized to remove this item.");
@@ -127,9 +118,9 @@ public class ShoppingListService {
 
     @Transactional
     public ShoppingListItem updateItem(Long itemId, String username, String name, int amount, Long shopId) {
-        ShoppingListItem item = getItem(itemId);
+        ShoppingListItem item = domainLookupService.getShoppingListItemOrThrow(itemId);
         ShoppingList list = item.getShoppingList();
-        MyUser user = getUser(username);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!list.hasMember(user)) {
             throw new RuntimeException("Not authorized to update this item.");
@@ -137,34 +128,15 @@ public class ShoppingListService {
 
         item.setName(name);
         item.setAmount(amount);
-        item.setShop(shopId != null ? getShop(shopId) : null);
+        item.setShop(shopId != null ? domainLookupService.getShopOrThrow(shopId) : null);
 
         return itemRepository.save(item);
     }
 
     public List<ShoppingList> getListsForUser(String username) {
-        MyUser user = getUser(username);
+        MyUser user = domainLookupService.getUserOrThrow(username);
         return listRepository.findByLeaderOrMembersContains(user, user);
     }
 
-    // Helper methods
-    private MyUser getUser(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-    }
 
-    private ShoppingList getList(Long id) {
-        return listRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ShoppingList not found"));
-    }
-
-    private Shop getShop(Long id) {
-        return shopRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Shop not found"));
-    }
-
-    private ShoppingListItem getItem(Long id) {
-        return itemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item not found"));
-    }
 }
