@@ -46,20 +46,10 @@ public class ItemService {
     public Item updateItem(Long itemId, Item updatedItem, Long newStorageId, String username) {
         Item existingItem = domainLookupService.getItemOrThrow(itemId);
         MyUser user = domainLookupService.getUserOrThrow(username);
-
         Storage newStorage = domainLookupService.getStorageOrThrow(newStorageId);
-        if (!newStorage.getCommunity().hasMember(user)) {
-            throw new RuntimeException("You are not allowed to move item to this storage.");
-        }
 
-        existingItem.setName(updatedItem.getName());
-        existingItem.setBrand(updatedItem.getBrand());
-        existingItem.setBarcode(updatedItem.getBarcode());
-        existingItem.setCategory(updatedItem.getCategory());
-        existingItem.setQuantity(updatedItem.getQuantity());
-        existingItem.setExpirations(updatedItem.getExpirations());
-        existingItem.setNutritionInfo(updatedItem.getNutritionInfo());
-        existingItem.setStorage(newStorage);
+        validateStorageAccess(newStorage, user);
+        applyItemChanges(existingItem, updatedItem, newStorage);
 
         return itemRepository.save(existingItem);
     }
@@ -85,5 +75,23 @@ public class ItemService {
         }
 
         return itemRepository.findByStorageId(storageId);
+    }
+
+    // Helper methods
+    private void validateStorageAccess(Storage storage, MyUser user) {
+        if (!storage.getCommunity().hasMember(user)) {
+            throw new RuntimeException("You are not allowed to move item to this storage.");
+        }
+    }
+
+    private void applyItemChanges(Item existingItem, Item updatedItem, Storage newStorage) {
+        existingItem.setName(updatedItem.getName());
+        existingItem.setBrand(updatedItem.getBrand());
+        existingItem.setBarcode(updatedItem.getBarcode());
+        existingItem.setCategory(updatedItem.getCategory());
+        existingItem.setQuantity(updatedItem.getQuantity());
+        existingItem.setExpirations(updatedItem.getExpirations());
+        existingItem.setNutritionInfo(updatedItem.getNutritionInfo());
+        existingItem.setStorage(newStorage);
     }
 }
