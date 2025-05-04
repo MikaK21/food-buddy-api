@@ -1,5 +1,6 @@
 package com.foodbuddy.food_buddy_api.application.helper;
 
+import com.foodbuddy.food_buddy_api.domain.exception.*;
 import com.foodbuddy.food_buddy_api.domain.model.*;
 import com.foodbuddy.food_buddy_api.domain.repository.*;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,6 @@ public class DomainLookupService {
     private final ShopRepository shopRepository;
     private final ItemRepository itemRepository;
     private final ShoppingListItemRepository shoppingListItemRepository;
-
 
     public DomainLookupService(MyUserRepository userRepository,
                                CommunityRepository communityRepository,
@@ -34,43 +34,42 @@ public class DomainLookupService {
 
     public MyUser getUserOrThrow(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new UserNotFoundException(username));
     }
 
     public Storage getStorageOrThrow(Long id) {
         return storageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Storage not found with ID: " + id));
+                .orElseThrow(() -> new StorageNotFoundException(id));
     }
 
     public Item getItemOrThrow(Long id) {
         return itemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item not found with ID: " + id));
+                .orElseThrow(() -> new ItemNotFoundException(id));
     }
 
     public Community getCommunityOrThrow(Long id) {
         return communityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Community not found with ID: " + id));
+                .orElseThrow(() -> new CommunityNotFoundException(id));
     }
 
     public ShoppingList getShoppingListOrThrow(Long id) {
         return listRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("ShoppingList not found"));
+                .orElseThrow(() -> new ShoppingListNotFoundException(id));
     }
 
     public Shop getShopOrThrow(Long id) {
         return shopRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Shop not found"));
+                .orElseThrow(() -> new ShopNotFoundException(id));
     }
 
     public ShoppingListItem getShoppingListItemOrThrow(Long id) {
         return shoppingListItemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item not found"));
+                .orElseThrow(() -> new ShoppingListItemNotFoundException(id));
     }
 
     public void checkShopOwnershipOrThrow(Shop shop, String username) {
         if (!shop.getOwner().getUsername().equals(username)) {
-            throw new RuntimeException("Not allowed to modify this shop.");
+            throw new ShopPermissionDeniedException(username, shop.getId());
         }
     }
 }
-
