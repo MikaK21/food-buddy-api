@@ -1,18 +1,15 @@
 package com.foodbuddy.food_buddy_api.UnitTest.application;
 
 import com.foodbuddy.food_buddy_api.application.event.ItemEventPublisher;
+import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.application.service.ItemService;
 import com.foodbuddy.food_buddy_api.domain.event.ItemCreatedEvent;
 import com.foodbuddy.food_buddy_api.domain.model.*;
 import com.foodbuddy.food_buddy_api.domain.repository.ItemRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.MyUserRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.StorageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,9 +22,8 @@ import org.mockito.quality.Strictness;
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ItemServiceTest {
 
+    @Mock private DomainLookupService domainLookupService;
     @Mock private ItemRepository itemRepository;
-    @Mock private StorageRepository storageRepository;
-    @Mock private MyUserRepository userRepository;
     @Mock private ItemEventPublisher eventPublisher;
 
     @InjectMocks
@@ -52,8 +48,8 @@ class ItemServiceTest {
         testStorage.setName("Test Storage");
         testStorage.setCommunity(testCommunity);
 
-        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(testUser));
-        when(storageRepository.findById(1L)).thenReturn(Optional.of(testStorage));
+        when(domainLookupService.getStorageOrThrow(1L)).thenReturn(testStorage);
+        when(domainLookupService.getUserOrThrow("testuser")).thenReturn(testUser);
     }
 
     @Test
@@ -76,7 +72,7 @@ class ItemServiceTest {
         verify(eventPublisher).publish(any(ItemCreatedEvent.class));
     }
 
-@Test
+    @Test
     void createItem_shouldThrow_whenUserNotMember() {
         Long storageId = 1L;
         String username = "unauthorizedUser";
@@ -95,8 +91,8 @@ class ItemServiceTest {
         Item item = new Item();
         item.setName("Apfel");
 
-        when(storageRepository.findById(storageId)).thenReturn(Optional.of(storage));
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        when(domainLookupService.getStorageOrThrow(storageId)).thenReturn(storage);
+        when(domainLookupService.getUserOrThrow(username)).thenReturn(user);
 
         assertThrows(RuntimeException.class, () -> {
             itemService.createItem(storageId, item, username);
@@ -115,7 +111,6 @@ class ItemServiceTest {
 
         Community oldCommunity = new Community();
         oldCommunity.setId(1L);
-        oldCommunity.setLeader(user);
         oldCommunity.addMember(user);
 
         Storage oldStorage = new Storage();
@@ -124,7 +119,6 @@ class ItemServiceTest {
 
         Community newCommunity = new Community();
         newCommunity.setId(2L);
-        newCommunity.setLeader(user);
         newCommunity.addMember(user);
 
         Storage newStorage = new Storage();
@@ -133,23 +127,25 @@ class ItemServiceTest {
 
         Item existingItem = new Item();
         existingItem.setId(itemId);
-        existingItem.setName("Altes Produkt");
+        existingItem.setName("Alt");
+        existingItem.setBrand("AltMarke");
+        existingItem.setBarcode("000000");
         existingItem.setStorage(oldStorage);
 
         Item updatedItem = new Item();
-        updatedItem.setName("Neues Produkt");
+        updatedItem.setName("Neu");
         updatedItem.setBrand("Neue Marke");
         updatedItem.setBarcode("123456789");
 
-        when(itemRepository.findById(itemId)).thenReturn(Optional.of(existingItem));
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        when(storageRepository.findById(newStorageId)).thenReturn(Optional.of(newStorage));
+        when(domainLookupService.getItemOrThrow(itemId)).thenReturn(existingItem); // <- NEU!
+        when(domainLookupService.getUserOrThrow(username)).thenReturn(user);
+        when(domainLookupService.getStorageOrThrow(newStorageId)).thenReturn(newStorage);
         when(itemRepository.save(any(Item.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Item result = itemService.updateItem(itemId, updatedItem, newStorageId, username);
 
         assertNotNull(result);
-        assertEquals("Neues Produkt", result.getName());
+        assertEquals("Neu", result.getName());
         assertEquals("Neue Marke", result.getBrand());
         assertEquals("123456789", result.getBarcode());
         assertEquals(newStorage, result.getStorage());
