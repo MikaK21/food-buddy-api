@@ -1,4 +1,4 @@
-package com.foodbuddy.food_buddy.domain.model;
+package com.foodbuddy.food_buddy_api.domain.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
