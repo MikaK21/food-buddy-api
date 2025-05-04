@@ -1,6 +1,6 @@
-package com.foodbuddy.food_buddy.infrastructure.webtoken;
+package com.foodbuddy.food_buddy_api.infrastructure.webtoken;
 
-import com.foodbuddy.food_buddy.application.service.MyUserDetailService;
+import com.foodbuddy.food_buddy_api.application.service.MyUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
