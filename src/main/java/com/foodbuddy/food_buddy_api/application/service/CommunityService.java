@@ -8,6 +8,8 @@ import com.foodbuddy.food_buddy_api.domain.repository.MyUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CommunityService {
 
@@ -107,5 +109,13 @@ public class CommunityService {
         }
 
         communityRepository.delete(community);
+    }
+
+    // Helper methods
+    public List<Community> getCommunitiesForUser(String username) {
+        MyUser user = domainLookupService.getUserOrThrow(username);
+        return communityRepository.findAll().stream()
+                .filter(c -> c.hasMember(user))
+                .toList();
     }
 }
