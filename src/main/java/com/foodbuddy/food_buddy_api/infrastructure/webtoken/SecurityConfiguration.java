@@ -1,6 +1,6 @@
-package com.foodbuddy.food_buddy.infrastructure.webtoken;
+package com.foodbuddy.food_buddy_api.infrastructure.webtoken;
 
-import com.foodbuddy.food_buddy.application.service.MyUserDetailService;
+import com.foodbuddy.food_buddy_api.application.service.MyUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

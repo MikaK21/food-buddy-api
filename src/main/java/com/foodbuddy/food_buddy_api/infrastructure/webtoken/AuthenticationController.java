@@ -1,4 +1,4 @@
-package com.foodbuddy.food_buddy.infrastructure.webtoken;
+package com.foodbuddy.food_buddy_api.infrastructure.webtoken;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
