@@ -1,5 +1,6 @@
-package com.foodbuddy.food_buddy.adapter.dto;
+package com.foodbuddy.food_buddy_api.adapter.dto;
 
+import com.foodbuddy.food_buddy_api.domain.model.enums.Unit;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,5 +23,5 @@ public class ItemResponseDTO {
 
     private NutritionInfoDTO nutritionInfo;
 
-    private SimpleStorageDTO storage;
+    private StorageResponseDTO storage;
 }

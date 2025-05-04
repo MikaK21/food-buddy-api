@@ -1,8 +1,10 @@
-package com.foodbuddy.food_buddy.adapter.mapper;
+package com.foodbuddy.food_buddy_api.adapter.mapper;
 
-import com.foodbuddy.food_buddy.adapter.dto.*;
-import com.foodbuddy.food_buddy.domain.model.Item;
-import com.foodbuddy.food_buddy.domain.model.valueobject.*;
+import com.foodbuddy.food_buddy_api.adapter.dto.*;
+import com.foodbuddy.food_buddy_api.domain.model.Item;
+import com.foodbuddy.food_buddy_api.domain.model.enums.ItemCategory;
+import com.foodbuddy.food_buddy_api.domain.model.valueobject.*;
+import com.foodbuddy.food_buddy_api.adapter.dto.CreateItemRequestDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 @Component
 public class ItemMapper {
 
-    public Item toItem(CreateItemDTO dto) {
+    public Item toItem(CreateItemRequestDTO dto) {
         Item item = new Item();
         item.setName(dto.getName());
         item.setBrand(dto.getBrand());
@@ -73,7 +75,7 @@ public class ItemMapper {
         }
 
         if (item.getStorage() != null) {
-            dto.setStorage(new SimpleStorageDTO(
+            dto.setStorage(new StorageResponseDTO(
                     item.getStorage().getId(),
                     item.getStorage().getName()
             ));
