@@ -1,6 +1,8 @@
 package com.foodbuddy.food_buddy_api.application.service;
 
 import com.foodbuddy.food_buddy_api.adapter.mapper.ItemMapper;
+import com.foodbuddy.food_buddy_api.application.event.ItemEventPublisher;
+import com.foodbuddy.food_buddy_api.domain.event.ItemCreatedEvent;
 import com.foodbuddy.food_buddy_api.domain.model.*;
 import com.foodbuddy.food_buddy_api.domain.repository.CommunityRepository;
 import com.foodbuddy.food_buddy_api.domain.repository.ItemRepository;
@@ -19,17 +21,20 @@ public class ItemService {
     private final CommunityRepository communityRepository;
     private final MyUserRepository userRepository;
     private final ItemMapper itemMapper;
+    private final ItemEventPublisher eventPublisher;
 
     public ItemService(ItemRepository itemRepository,
                        StorageRepository storageRepository,
                        CommunityRepository communityRepository,
                        MyUserRepository userRepository,
-                       ItemMapper itemMapper) {
+                       ItemMapper itemMapper,
+                       ItemEventPublisher eventPublisher) {
         this.itemRepository = itemRepository;
         this.storageRepository = storageRepository;
         this.communityRepository = communityRepository;
         this.userRepository = userRepository;
         this.itemMapper = itemMapper;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -42,8 +47,12 @@ public class ItemService {
         }
 
         item.setStorage(storage);
+        Item savedItem = itemRepository.save(item);
 
-        return itemRepository.save(item);
+        // Event auslösen
+        eventPublisher.publish(new ItemCreatedEvent(savedItem));
+
+        return savedItem;
     }
 
     @Transactional
