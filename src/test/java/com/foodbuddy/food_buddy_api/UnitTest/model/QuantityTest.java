@@ -1,5 +1,7 @@
 package com.foodbuddy.food_buddy_api.UnitTest.model;
 
+import com.foodbuddy.food_buddy_api.domain.model.enums.Unit;
+import com.foodbuddy.food_buddy_api.domain.model.valueobject.Quantity;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

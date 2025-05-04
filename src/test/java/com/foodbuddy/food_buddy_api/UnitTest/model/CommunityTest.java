@@ -1,6 +1,10 @@
 package com.foodbuddy.food_buddy_api.UnitTest.model;
 
+import com.foodbuddy.food_buddy_api.domain.model.Community;
+import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CommunityTest {
 

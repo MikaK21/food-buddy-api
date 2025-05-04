@@ -1,7 +1,9 @@
 package com.foodbuddy.food_buddy_api.UnitTest.model;
 
-import com.foodbuddy.food_buddy.domain.model.Item;
-import com.foodbuddy.food_buddy.domain.model.valueobject.*;
+import com.foodbuddy.food_buddy_api.domain.model.Item;
+import com.foodbuddy.food_buddy_api.domain.model.enums.ItemCategory;
+import com.foodbuddy.food_buddy_api.domain.model.enums.Unit;
+import com.foodbuddy.food_buddy_api.domain.model.valueobject.*;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;

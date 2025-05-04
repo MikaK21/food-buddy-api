@@ -1,5 +1,6 @@
 package com.foodbuddy.food_buddy_api.UnitTest.model;
 
+import com.foodbuddy.food_buddy_api.domain.model.valueobject.ExpirationEntry;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
