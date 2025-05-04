@@ -1,6 +1,7 @@
 package com.foodbuddy.food_buddy_api.domain.model;
 
 import com.foodbuddy.food_buddy_api.domain.model.enums.ItemCategory;
+import com.foodbuddy.food_buddy_api.domain.model.valueobject.Barcode;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.ExpirationEntry;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.NutritionInfo;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.Quantity;
@@ -26,7 +27,7 @@ public class Item {
 
     private String brand;
 
-    private String barcode;
+    private Barcode barcode;
 
     @Enumerated(EnumType.STRING)
     private ItemCategory category;
