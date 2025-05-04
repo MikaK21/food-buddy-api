@@ -1,5 +1,6 @@
 package com.foodbuddy.food_buddy_api.UnitTest.model;
 
+import com.foodbuddy.food_buddy_api.domain.model.valueobject.NutritionInfo;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

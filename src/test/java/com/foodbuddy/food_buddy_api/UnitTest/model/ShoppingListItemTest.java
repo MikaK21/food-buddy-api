@@ -1,8 +1,8 @@
 package com.foodbuddy.food_buddy_api.UnitTest.model;
 
-import com.foodbuddy.food_buddy.domain.model.Shop;
-import com.foodbuddy.food_buddy.domain.model.ShoppingList;
-import com.foodbuddy.food_buddy.domain.model.ShoppingListItem;
+import com.foodbuddy.food_buddy_api.domain.model.Shop;
+import com.foodbuddy.food_buddy_api.domain.model.ShoppingList;
+import com.foodbuddy.food_buddy_api.domain.model.ShoppingListItem;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
