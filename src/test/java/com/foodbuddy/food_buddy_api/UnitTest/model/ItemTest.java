@@ -24,7 +24,7 @@ class ItemTest {
         item.setId(1L);
         item.setName("Joghurt");
         item.setBrand("Müller");
-        item.setBarcode("987654321");
+        item.setBarcode(new Barcode("87654321"));
         item.setCategory(ItemCategory.FOOD);
         item.setQuantity(quantity);
         item.setNutritionInfo(nutrition);
@@ -35,7 +35,7 @@ class ItemTest {
         assertEquals(1L, item.getId());
         assertEquals("Joghurt", item.getName());
         assertEquals("Müller", item.getBrand());
-        assertEquals("987654321", item.getBarcode());
+        assertEquals("87654321", item.getBarcode().getValue());
         assertEquals(ItemCategory.FOOD, item.getCategory());
 
         assertEquals(2.0, item.getQuantity().getValue());

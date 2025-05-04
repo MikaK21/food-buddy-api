@@ -5,6 +5,7 @@ import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.application.service.ItemService;
 import com.foodbuddy.food_buddy_api.domain.event.ItemCreatedEvent;
 import com.foodbuddy.food_buddy_api.domain.model.*;
+import com.foodbuddy.food_buddy_api.domain.model.valueobject.Barcode;
 import com.foodbuddy.food_buddy_api.domain.repository.ItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -129,13 +130,13 @@ class ItemServiceTest {
         existingItem.setId(itemId);
         existingItem.setName("Alt");
         existingItem.setBrand("AltMarke");
-        existingItem.setBarcode("000000");
+        existingItem.setBarcode(new Barcode("00000000"));
         existingItem.setStorage(oldStorage);
 
         Item updatedItem = new Item();
         updatedItem.setName("Neu");
         updatedItem.setBrand("Neue Marke");
-        updatedItem.setBarcode("123456789");
+        updatedItem.setBarcode(new Barcode("12345678"));
 
         when(domainLookupService.getItemOrThrow(itemId)).thenReturn(existingItem); // <- NEU!
         when(domainLookupService.getUserOrThrow(username)).thenReturn(user);
@@ -147,7 +148,7 @@ class ItemServiceTest {
         assertNotNull(result);
         assertEquals("Neu", result.getName());
         assertEquals("Neue Marke", result.getBrand());
-        assertEquals("123456789", result.getBarcode());
+        assertEquals("123456789", result.getBarcode().getValue());
         assertEquals(newStorage, result.getStorage());
     }
 }
