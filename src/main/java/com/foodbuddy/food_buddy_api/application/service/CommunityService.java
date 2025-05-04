@@ -1,5 +1,6 @@
 package com.foodbuddy.food_buddy_api.application.service;
 
+import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.domain.model.Community;
 import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import com.foodbuddy.food_buddy_api.domain.repository.CommunityRepository;
@@ -7,17 +8,17 @@ import com.foodbuddy.food_buddy_api.domain.repository.MyUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class CommunityService {
 
     private final CommunityRepository communityRepository;
     private final MyUserRepository userRepository;
+    private final DomainLookupService domainLookupService;
 
-    public CommunityService(CommunityRepository communityRepository, MyUserRepository userRepository) {
+    public CommunityService(CommunityRepository communityRepository, MyUserRepository userRepository, DomainLookupService domainLookupService) {
         this.communityRepository = communityRepository;
         this.userRepository = userRepository;
+        this.domainLookupService = domainLookupService;
     }
 
     @Transactional
@@ -35,9 +36,9 @@ public class CommunityService {
 
     @Transactional
     public void addMember(Long communityId, String leaderUsername, String newMemberUsername) {
-        Community community = getCommunityOrThrow(communityId);
-        MyUser leader = getUserOrThrow(leaderUsername);
-        MyUser newMember = getUserOrThrow(newMemberUsername);
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser leader = domainLookupService.getUserOrThrow(leaderUsername);
+        MyUser newMember = domainLookupService.getUserOrThrow(newMemberUsername);
 
         if (!community.isLeader(leader)) {
             throw new RuntimeException("Only the leader can add members.");
@@ -49,9 +50,9 @@ public class CommunityService {
 
     @Transactional
     public void removeMember(Long communityId, String leaderUsername, String memberUsername) {
-        Community community = getCommunityOrThrow(communityId);
-        MyUser leader = getUserOrThrow(leaderUsername);
-        MyUser member = getUserOrThrow(memberUsername);
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser leader = domainLookupService.getUserOrThrow(memberUsername);
+        MyUser member = domainLookupService.getUserOrThrow(memberUsername);
 
         if (!community.isLeader(leader)) {
             throw new RuntimeException("Only the leader can remove members.");
@@ -67,9 +68,9 @@ public class CommunityService {
 
     @Transactional
     public void transferLeadership(Long communityId, String currentLeaderUsername, String newLeaderUsername) {
-        Community community = getCommunityOrThrow(communityId);
-        MyUser currentLeader = getUserOrThrow(currentLeaderUsername);
-        MyUser newLeader = getUserOrThrow(newLeaderUsername);
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser currentLeader = domainLookupService.getUserOrThrow(currentLeaderUsername);
+        MyUser newLeader = domainLookupService.getUserOrThrow(newLeaderUsername);
 
         if (!community.isLeader(currentLeader)) {
             throw new RuntimeException("Only the current leader can transfer leadership.");
@@ -85,8 +86,8 @@ public class CommunityService {
 
     @Transactional
     public void leaveCommunity(Long communityId, String username) {
-        Community community = getCommunityOrThrow(communityId);
-        MyUser user = getUserOrThrow(username);
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (community.isLeader(user)) {
             throw new RuntimeException("Leader must transfer leadership before leaving.");
@@ -98,30 +99,13 @@ public class CommunityService {
 
     @Transactional
     public void deleteCommunity(Long communityId, String leaderUsername) {
-        Community community = getCommunityOrThrow(communityId);
-        MyUser leader = getUserOrThrow(leaderUsername);
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser leader = domainLookupService.getUserOrThrow(leaderUsername);
 
         if (!community.isLeader(leader)) {
             throw new RuntimeException("Only the leader can delete the community.");
         }
 
         communityRepository.delete(community);
-    }
-
-    public List<Community> getCommunitiesForUser(String username) {
-        MyUser user = getUserOrThrow(username);
-        return communityRepository.findAll().stream()
-                .filter(c -> c.hasMember(user))
-                .toList();
-    }
-
-    private Community getCommunityOrThrow(Long id) {
-        return communityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Community not found"));
-    }
-
-    private MyUser getUserOrThrow(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
     }
 }

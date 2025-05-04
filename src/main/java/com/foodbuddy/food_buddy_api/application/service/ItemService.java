@@ -1,13 +1,10 @@
 package com.foodbuddy.food_buddy_api.application.service;
 
-import com.foodbuddy.food_buddy_api.adapter.mapper.ItemMapper;
 import com.foodbuddy.food_buddy_api.application.event.ItemEventPublisher;
+import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.domain.event.ItemCreatedEvent;
 import com.foodbuddy.food_buddy_api.domain.model.*;
-import com.foodbuddy.food_buddy_api.domain.repository.CommunityRepository;
 import com.foodbuddy.food_buddy_api.domain.repository.ItemRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.MyUserRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.StorageRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -17,30 +14,20 @@ import java.util.List;
 public class ItemService {
 
     private final ItemRepository itemRepository;
-    private final StorageRepository storageRepository;
-    private final CommunityRepository communityRepository;
-    private final MyUserRepository userRepository;
-    private final ItemMapper itemMapper;
     private final ItemEventPublisher eventPublisher;
+    private final DomainLookupService domainLookupService;
 
     public ItemService(ItemRepository itemRepository,
-                       StorageRepository storageRepository,
-                       CommunityRepository communityRepository,
-                       MyUserRepository userRepository,
-                       ItemMapper itemMapper,
-                       ItemEventPublisher eventPublisher) {
+                       ItemEventPublisher eventPublisher, DomainLookupService domainLookupService) {
         this.itemRepository = itemRepository;
-        this.storageRepository = storageRepository;
-        this.communityRepository = communityRepository;
-        this.userRepository = userRepository;
-        this.itemMapper = itemMapper;
         this.eventPublisher = eventPublisher;
+        this.domainLookupService = domainLookupService;
     }
 
     @Transactional
     public Item createItem(Long storageId, Item item, String username) {
-        Storage storage = getStorageOrThrow(storageId);
-        MyUser user = getUserOrThrow(username);
+        Storage storage = domainLookupService.getStorageOrThrow(storageId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!storage.getCommunity().hasMember(user)) {
             throw new RuntimeException("You are not allowed to add items to this storage.");
@@ -57,10 +44,10 @@ public class ItemService {
 
     @Transactional
     public Item updateItem(Long itemId, Item updatedItem, Long newStorageId, String username) {
-        Item existingItem = getItemOrThrow(itemId);
-        MyUser user = getUserOrThrow(username);
+        Item existingItem = domainLookupService.getItemOrThrow(itemId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
-        Storage newStorage = getStorageOrThrow(newStorageId);
+        Storage newStorage = domainLookupService.getStorageOrThrow(newStorageId);
         if (!newStorage.getCommunity().hasMember(user)) {
             throw new RuntimeException("You are not allowed to move item to this storage.");
         }
@@ -79,8 +66,8 @@ public class ItemService {
 
     @Transactional
     public void deleteItem(Long itemId, String username) {
-        Item item = getItemOrThrow(itemId);
-        MyUser user = getUserOrThrow(username);
+        Item item = domainLookupService.getItemOrThrow(itemId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!item.getStorage().getCommunity().hasMember(user)) {
             throw new RuntimeException("You are not allowed to delete this item.");
@@ -90,29 +77,13 @@ public class ItemService {
     }
 
     public List<Item> getItemsByStorage(Long storageId, String username) {
-        Storage storage = getStorageOrThrow(storageId);
-        MyUser user = getUserOrThrow(username);
+        Storage storage = domainLookupService.getStorageOrThrow(storageId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!storage.getCommunity().hasMember(user)) {
             throw new RuntimeException("You are not allowed to view items of this storage.");
         }
 
         return itemRepository.findByStorageId(storageId);
-    }
-
-    // 🔹 Helper-Methoden
-    private Item getItemOrThrow(Long id) {
-        return itemRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Item not found."));
-    }
-
-    private Storage getStorageOrThrow(Long id) {
-        return storageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Storage not found."));
-    }
-
-    private MyUser getUserOrThrow(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found."));
     }
 }

@@ -1,10 +1,9 @@
 package com.foodbuddy.food_buddy_api.application.service;
 
+import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.domain.model.Community;
 import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import com.foodbuddy.food_buddy_api.domain.model.Storage;
-import com.foodbuddy.food_buddy_api.domain.repository.CommunityRepository;
-import com.foodbuddy.food_buddy_api.domain.repository.MyUserRepository;
 import com.foodbuddy.food_buddy_api.domain.repository.StorageRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -15,19 +14,17 @@ import java.util.List;
 public class StorageService {
 
     private final StorageRepository storageRepository;
-    private final CommunityRepository communityRepository;
-    private final MyUserRepository userRepository;
+    private final DomainLookupService domainLookupService;
 
-    public StorageService(StorageRepository storageRepository, CommunityRepository communityRepository, MyUserRepository userRepository) {
+    public StorageService(StorageRepository storageRepository, DomainLookupService domainLookupService) {
         this.storageRepository = storageRepository;
-        this.communityRepository = communityRepository;
-        this.userRepository = userRepository;
+        this.domainLookupService = domainLookupService;
     }
 
     @Transactional
     public Storage createStorage(Long communityId, String storageName, String username) {
-        Community community = getCommunityOrThrow(communityId);
-        MyUser user = getUserOrThrow(username);
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!community.hasMember(user)) {
             throw new RuntimeException("Only members of the community can create storages.");
@@ -42,9 +39,9 @@ public class StorageService {
 
     @Transactional
     public void deleteStorage(Long storageId, String username) {
-        Storage storage = getStorageOrThrow(storageId);
+        Storage storage = domainLookupService.getStorageOrThrow(storageId);
         Community community = storage.getCommunity();
-        MyUser user = getUserOrThrow(username);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!community.hasMember(user)) {
             throw new RuntimeException("Only members of the community can delete storages.");
@@ -55,9 +52,9 @@ public class StorageService {
 
     @Transactional
     public Storage renameStorage(Long storageId, String newName, String username) {
-        Storage storage = getStorageOrThrow(storageId);
+        Storage storage = domainLookupService.getStorageOrThrow(storageId);
         Community community = storage.getCommunity();
-        MyUser user = getUserOrThrow(username);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!community.hasMember(user)) {
             throw new RuntimeException("Only members of the community can rename storages.");
@@ -68,29 +65,13 @@ public class StorageService {
     }
 
     public List<Storage> getStoragesForCommunity(Long communityId, String username) {
-        Community community = getCommunityOrThrow(communityId);
-        MyUser user = getUserOrThrow(username);
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
         if (!community.hasMember(user)) {
             throw new RuntimeException("Only members of the community can view storages.");
         }
 
         return storageRepository.findByCommunityId(communityId);
-    }
-
-    // Helper methods
-    private Community getCommunityOrThrow(Long id) {
-        return communityRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Community not found"));
-    }
-
-    private MyUser getUserOrThrow(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
-    }
-
-    private Storage getStorageOrThrow(Long id) {
-        return storageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Storage not found"));
     }
 }
