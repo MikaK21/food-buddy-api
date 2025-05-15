@@ -148,7 +148,7 @@ class ItemServiceTest {
         assertNotNull(result);
         assertEquals("Neu", result.getName());
         assertEquals("Neue Marke", result.getBrand());
-        assertEquals("123456789", result.getBarcode().getValue());
+        assertEquals("12345678", result.getBarcode().getValue());
         assertEquals(newStorage, result.getStorage());
     }
 }
