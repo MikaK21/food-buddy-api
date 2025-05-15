@@ -3,6 +3,7 @@ package com.foodbuddy.food_buddy_api.application.service;
 import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.domain.model.*;
 import com.foodbuddy.food_buddy_api.domain.repository.*;
+import com.foodbuddy.food_buddy_api.domain.service.ShoppingListDomainService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,18 @@ public class ShoppingListService {
     private final ShoppingListRepository listRepository;
     private final ShoppingListItemRepository itemRepository;
     private final DomainLookupService domainLookupService;
+    private final ShoppingListDomainService shoppingListDomainService;
 
-    public ShoppingListService(ShoppingListRepository listRepository,
-                               ShoppingListItemRepository itemRepository, DomainLookupService domainLookupService) {
+    public ShoppingListService(
+            ShoppingListRepository listRepository,
+            ShoppingListItemRepository itemRepository,
+            DomainLookupService domainLookupService,
+            ShoppingListDomainService shoppingListDomainService
+    ) {
         this.listRepository = listRepository;
         this.itemRepository = itemRepository;
         this.domainLookupService = domainLookupService;
+        this.shoppingListDomainService = shoppingListDomainService;
     }
 
     @Transactional
@@ -28,7 +35,7 @@ public class ShoppingListService {
         ShoppingList list = new ShoppingList();
         list.setName(listName);
         list.setLeader(user);
-        list.getMembers().add(user); // Optional: Leader automatisch Mitglied
+        list.getMembers().add(user);
 
         return listRepository.save(list);
     }
@@ -50,9 +57,11 @@ public class ShoppingListService {
     public void deleteList(Long listId, String username) {
         ShoppingList list = domainLookupService.getShoppingListOrThrow(listId);
         MyUser user = domainLookupService.getUserOrThrow(username);
+
         if (!list.isLeader(user)) {
             throw new RuntimeException("Only the leader can delete the list.");
         }
+
         listRepository.delete(list);
     }
 
@@ -65,6 +74,7 @@ public class ShoppingListService {
         if (!list.isLeader(leader)) {
             throw new RuntimeException("Only the leader can add members.");
         }
+
         list.addMember(newMember);
         listRepository.save(list);
     }
@@ -72,7 +82,7 @@ public class ShoppingListService {
     @Transactional
     public void removeMember(Long listId, String username, String targetUsername) {
         ShoppingList list = domainLookupService.getShoppingListOrThrow(listId);
-        MyUser leader = domainLookupService.getUserOrThrow(targetUsername);
+        MyUser leader = domainLookupService.getUserOrThrow(username);
         MyUser target = domainLookupService.getUserOrThrow(targetUsername);
 
         if (!list.isLeader(leader)) {
@@ -92,7 +102,15 @@ public class ShoppingListService {
             throw new RuntimeException("Not authorized to modify this list.");
         }
 
+        if (!shoppingListDomainService.isBelowItemLimit(list)) {
+            throw new RuntimeException("Cannot add more than 50 items to the list.");
+        }
+
         Shop shop = (shopId != null) ? domainLookupService.getShopOrThrow(shopId) : null;
+
+        if (shoppingListDomainService.isDuplicateItem(list, name, amount, shop)) {
+            throw new RuntimeException("Item already exists in this list.");
+        }
 
         ShoppingListItem item = new ShoppingListItem();
         item.setName(name);
@@ -137,6 +155,4 @@ public class ShoppingListService {
         MyUser user = domainLookupService.getUserOrThrow(username);
         return listRepository.findByLeaderOrMembersContains(user, user);
     }
-
-
 }
