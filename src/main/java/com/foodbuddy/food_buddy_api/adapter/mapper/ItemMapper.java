@@ -3,15 +3,23 @@ package com.foodbuddy.food_buddy_api.adapter.mapper;
 import com.foodbuddy.food_buddy_api.adapter.dto.*;
 import com.foodbuddy.food_buddy_api.domain.model.Item;
 import com.foodbuddy.food_buddy_api.domain.model.enums.ItemCategory;
+import com.foodbuddy.food_buddy_api.domain.model.enums.ProductGroup;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.*;
-import com.foodbuddy.food_buddy_api.adapter.dto.CreateItemRequestDTO;
+import com.foodbuddy.food_buddy_api.domain.service.ItemDomainService;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class ItemMapper {
+
+    private final ItemDomainService itemDomainService;
+
+    public ItemMapper(ItemDomainService itemDomainService) {
+        this.itemDomainService = itemDomainService;
+    }
 
     public Item toItem(CreateItemRequestDTO dto) {
         Item item = new Item();
@@ -20,6 +28,7 @@ public class ItemMapper {
         item.setBarcode(dto.getBarcode());
         item.setCategory(ItemCategory.valueOf(dto.getCategory()));
         item.setQuantity(new Quantity(dto.getQuantityValue(), dto.getQuantityUnit()));
+        item.setProductGroup(itemDomainService.validateProductGroup(item.getCategory(), item.getProductGroup()));
 
         if (dto.getExpirations() != null) {
             List<ExpirationEntry> expirations = dto.getExpirations().stream()
@@ -48,6 +57,7 @@ public class ItemMapper {
         dto.setCategory(item.getCategory().name());
         dto.setQuantityValue(item.getQuantity().getValue());
         dto.setQuantityUnit(item.getQuantity().getUnit());
+        dto.setProductGroup(item.getProductGroup());
 
         if (item.getExpirations() != null) {
             dto.setExpirations(item.getExpirations().stream()
@@ -80,6 +90,8 @@ public class ItemMapper {
                     item.getStorage().getName()
             ));
         }
+
+        dto.setExpirationStatus(itemDomainService.getExpirationStatus(item, LocalDate.now()).name());
 
         return dto;
     }

@@ -1,6 +1,7 @@
 package com.foodbuddy.food_buddy_api.adapter.dto;
 
 import com.foodbuddy.food_buddy_api.domain.model.enums.Unit;
+import com.foodbuddy.food_buddy_api.domain.model.enums.ProductGroup;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.Barcode;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,4 +25,6 @@ public class CreateItemRequestDTO {
     private List<ExpirationDTO> expirations;
 
     private NutritionInfoDTO nutritionInfo;
+
+    private ProductGroup productGroup;
 }
