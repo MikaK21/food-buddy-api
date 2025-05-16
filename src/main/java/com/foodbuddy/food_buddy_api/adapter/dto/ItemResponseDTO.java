@@ -1,5 +1,6 @@
 package com.foodbuddy.food_buddy_api.adapter.dto;
 
+import com.foodbuddy.food_buddy_api.domain.model.enums.ProductGroup;
 import com.foodbuddy.food_buddy_api.domain.model.enums.Unit;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.Barcode;
 import lombok.Getter;
@@ -25,4 +26,8 @@ public class ItemResponseDTO {
     private NutritionInfoDTO nutritionInfo;
 
     private StorageResponseDTO storage;
+
+    private ProductGroup productGroup;
+    private String expirationStatus;
+
 }

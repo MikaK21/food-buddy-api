@@ -60,4 +60,13 @@ public class ItemController {
                 .toList();
         return ResponseEntity.ok(result);
     }
+
+    @GetMapping("/storage/{storageId}/status")
+    public ResponseEntity<?> getItemsWithStatus(@PathVariable Long storageId, Principal principal) {
+        List<Item> items = itemService.getItemsByStorage(storageId, principal.getName());
+        List<ItemResponseDTO> result = items.stream()
+                .map(itemMapper::toResponseDTO)
+                .toList();
+        return ResponseEntity.ok(result);
+    }
 }

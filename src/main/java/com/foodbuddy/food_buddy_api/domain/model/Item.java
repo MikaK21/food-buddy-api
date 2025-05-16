@@ -1,6 +1,7 @@
 package com.foodbuddy.food_buddy_api.domain.model;
 
 import com.foodbuddy.food_buddy_api.domain.model.enums.ItemCategory;
+import com.foodbuddy.food_buddy_api.domain.model.enums.ProductGroup;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.Barcode;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.ExpirationEntry;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.NutritionInfo;
@@ -40,6 +41,9 @@ public class Item {
 
     @Embedded
     private NutritionInfo nutritionInfo;
+
+    @Enumerated(EnumType.STRING)
+    private ProductGroup productGroup;
 
     @ManyToOne
     @JoinColumn(name = "storage_id")
