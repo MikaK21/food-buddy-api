@@ -5,6 +5,11 @@ import jakarta.persistence.Embeddable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Value Object für eine Kombination aus Menge und Verfallsdatum.
+ *
+ * Wird verwendet, um Artikel mit mehreren Ablaufdaten zu verwalten.
+ */
 @Embeddable
 public class ExpirationEntry {
 

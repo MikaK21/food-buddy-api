@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Entity für einzelne Einträge innerhalb einer Einkaufsliste.
+ *
+ * Ein Eintrag besteht aus Name, Menge, optionalem Shop und Verknüpfung zur Liste.
+ */
 @Getter
 @Setter
 @Entity

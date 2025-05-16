@@ -9,6 +9,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service zur Verwaltung von Shops eines Benutzers.
+ *
+ * Bietet Funktionen zum Erstellen, Umbenennen, Löschen und Abrufen der eigenen Shops.
+ * Prüft Besitzerrechte bei Änderungen.
+ */
 @Service
 public class ShopService {
 

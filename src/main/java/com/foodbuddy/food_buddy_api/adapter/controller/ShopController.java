@@ -8,6 +8,15 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Map;
 
+/**
+ * REST-Controller zur Verwaltung von Einkaufsgeschäften (Shops).
+ *
+ * Bietet Funktionen:
+ * - Erstellen eines neuen Shops
+ * - Umbenennen eines Shops
+ * - Löschen eines Shops
+ * - Auflisten aller Shops des angemeldeten Benutzers
+ */
 @RestController
 @RequestMapping("/api/shop")
 public class ShopController {

@@ -6,6 +6,15 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für die {@link Community} Entität.
+ *
+ * Testet:
+ * - Erstellung einer Community mit Leader
+ * - Hinzufügen und Entfernen von Mitgliedern
+ * - Überprüfung der Leader-Zugehörigkeit
+ * - Übertragung der Führungsrolle
+ */
 class CommunityTest {
 
     @Test

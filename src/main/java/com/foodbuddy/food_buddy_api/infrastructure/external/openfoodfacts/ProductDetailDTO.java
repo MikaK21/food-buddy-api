@@ -3,6 +3,15 @@ package com.foodbuddy.food_buddy_api.infrastructure.external.openfoodfacts;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * DTO zur Darstellung von Produktinformationen aus der OpenFoodFacts-API.
+ *
+ * Beinhaltet:
+ * - Produktname, Marke, Barcode, Kategorie
+ * - Menge und Einheit
+ * - Nährwertangaben pro 100g
+ * - URLs zu Produktbildern (z. B. Nährwertetikett)
+ */
 @Getter
 @Setter
 public class ProductDetailDTO {

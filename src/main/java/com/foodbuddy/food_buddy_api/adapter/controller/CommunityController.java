@@ -10,6 +10,16 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST-Controller zur Verwaltung von Communities.
+ *
+ * Bietet Funktionen:
+ * - Erstellen einer Community
+ * - Hinzufügen und Entfernen von Mitgliedern
+ * - Übertragen der Führungsrolle
+ * - Verlassen und Löschen einer Community
+ * - Auflisten der eigenen Communities
+ */
 @RestController
 @RequestMapping("/api/community")
 public class CommunityController {

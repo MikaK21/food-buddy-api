@@ -10,6 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service zur Verwaltung von Speichern in einer Community.
+ *
+ * Ermöglicht Erstellen, Umbenennen, Löschen und Abrufen von Storages.
+ * Führt Berechtigungsprüfungen anhand der Community-Mitgliedschaft durch.
+ */
 @Service
 public class StorageService {
 

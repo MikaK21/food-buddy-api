@@ -5,6 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Entity zur Repräsentation eines Lagers innerhalb einer Community.
+ *
+ * Jeder Storage gehört genau einer Community und enthält Artikel (Items).
+ */
 @Getter
 @Setter
 @Entity

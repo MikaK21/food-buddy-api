@@ -6,6 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für die {@link ShoppingList} Entität.
+ *
+ * Testet:
+ * - Erstellung und Mitgliederverwaltung
+ * - Rollenprüfung (Leader)
+ */
 class ShoppingListTest {
 
     @Test

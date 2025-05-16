@@ -6,6 +6,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Entity zur Repräsentation eines Benutzers.
+ *
+ * Enthält Benutzername, E-Mail-Adresse und Passwort.
+ * Wird für Authentifizierung und Rechteprüfung verwendet.
+ */
 @Getter
 @Setter
 @Entity

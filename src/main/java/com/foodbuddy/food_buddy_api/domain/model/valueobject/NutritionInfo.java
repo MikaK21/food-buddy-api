@@ -4,6 +4,11 @@ import jakarta.persistence.Embeddable;
 
 import java.util.Objects;
 
+/**
+ * Value Object zur Speicherung von Nährwertinformationen eines Artikels.
+ *
+ * Enthält kcal, Kohlenhydrate, Zucker, Eiweiß, Fett, gesättigte Fette, Salz und Ballaststoffe.
+ */
 @Embeddable
 public class NutritionInfo {
 

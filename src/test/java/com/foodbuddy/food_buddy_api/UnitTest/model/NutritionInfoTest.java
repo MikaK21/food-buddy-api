@@ -5,6 +5,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für das Value Object {@link NutritionInfo}.
+ *
+ * Testet:
+ * - Korrekte Initialisierung mit gültigen Werten
+ * - Validierung negativer Eingabewerte
+ */
 class NutritionInfoTest {
 
     @Test

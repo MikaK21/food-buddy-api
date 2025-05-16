@@ -6,6 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Unit Test für {@link Storage}.
+ *
+ * Testet:
+ * - Erstellung mit Verknüpfung zu einer Community
+ */
 public class StorageTest {
 
     @Test

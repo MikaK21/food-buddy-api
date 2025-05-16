@@ -4,6 +4,13 @@ import com.foodbuddy.food_buddy_api.domain.model.ShoppingList;
 import com.foodbuddy.food_buddy_api.domain.model.Shop;
 import org.springframework.stereotype.Component;
 
+/**
+ * Domänenspezifische Regeln für Einkaufslisten.
+ *
+ * Beinhaltet:
+ * - Prüfung auf Duplikate innerhalb einer Liste
+ * - Limitierung auf maximal 50 Einträge pro Liste
+ */
 @Component
 public class ShoppingListDomainService {
 

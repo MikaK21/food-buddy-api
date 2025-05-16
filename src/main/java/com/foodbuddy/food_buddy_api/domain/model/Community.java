@@ -8,6 +8,12 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Entity zur Repräsentation einer Benutzer-Community.
+ *
+ * Eine Community besitzt einen Namen, einen führenden Benutzer (Leader) sowie eine Menge an Mitgliedern.
+ * Benutzer können gemeinsam auf Speicher und Items zugreifen.
+ */
 @Getter
 @Setter
 @Entity

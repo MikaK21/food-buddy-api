@@ -5,6 +5,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * REST-Controller zur Anbindung an die OpenFoodFacts-API.
+ *
+ * Bietet einen Endpunkt zur Barcode-basierten Produktsuche.
+ * Antwortet mit detaillierten Produktinformationen (Name, Marke, Nährwerte etc.).
+ */
 @RestController
 @RequestMapping("/api/openfood")
 public class OpenFoodFactsController {

@@ -9,6 +9,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service zur Geschäftslogik für Einkaufslisten.
+ *
+ * Verantwortlich für:
+ * - Erstellung, Umbenennung und Löschung von Einkaufslisten
+ * - Verwaltung von Mitgliedschaften
+ * - Verwaltung und Validierung von Items (Duplikate, Limit)
+ */
 @Service
 public class ShoppingListService {
 

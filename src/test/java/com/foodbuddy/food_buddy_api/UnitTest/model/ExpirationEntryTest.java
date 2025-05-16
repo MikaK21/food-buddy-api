@@ -7,6 +7,13 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für {@link ExpirationEntry}.
+ *
+ * Testet:
+ * - Erstellung mit gültigen Daten
+ * - Validierung bei ungültiger Menge oder fehlendem Datum
+ */
 class ExpirationEntryTest {
 
     @Test

@@ -8,6 +8,11 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * DTO zur Ausgabe eines Artikels mit allen zugehörigen Informationen.
+ *
+ * Beinhaltet Verfallsstatus, Lagerinformationen, Nährwerte und Barcode.
+ */
 @Getter
 @Setter
 public class ItemResponseDTO {

@@ -7,6 +7,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für {@link ShoppingListItem}.
+ *
+ * Testet:
+ * - Setzen von Name, Menge, Shop und Einkaufsliste
+ */
 class ShoppingListItemTest {
 
     @Test

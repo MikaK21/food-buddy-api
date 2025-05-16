@@ -6,6 +6,13 @@ import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import com.foodbuddy.food_buddy_api.domain.model.ShoppingList;
 import com.foodbuddy.food_buddy_api.domain.model.ShoppingListItem;
 
+/**
+ * Mapper zur Umwandlung zwischen {@code ShoppingList} / {@code ShoppingListItem}
+ * und deren DTO-Darstellungen für die API.
+ *
+ * - Wandelt Einkaufslisten in DTOs mit Mitgliedern und Items
+ * - Wandelt Listeneinträge inkl. Shop-Zuordnung in DTOs
+ */
 public class ShoppingListMapper {
 
     public static ShoppingListResponseDTO toDto(ShoppingList list) {

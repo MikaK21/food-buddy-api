@@ -10,6 +10,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service zur Verwaltung von Communities.
+ *
+ * Bietet Methoden zum Erstellen, Bearbeiten und Löschen von Communities
+ * sowie zur Mitgliederverwaltung und Führungsübertragung.
+ * Validiert Benutzerrechte und prüft Mitgliedschaften.
+ */
 @Service
 public class CommunityService {
 

@@ -10,6 +10,13 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Fachlogik für Artikel (Items).
+ *
+ * Bietet:
+ * - Regelbasierte Berechnung des Verfallsstatus
+ * - Validierung von Produkttyp-Zuordnungen basierend auf Kategorie
+ */
 @Component
 public class ItemDomainService {
     public ExpirationStatus getExpirationStatus(Item item, LocalDate today) {
