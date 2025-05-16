@@ -14,6 +14,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Service zur Erstellung, Validierung und Analyse von JWT-Tokens.
+ *
+ * Nutzt eine geheime Signatur zur Sicherung der Tokens.
+ */
 @Service
 public class JwtService {
 

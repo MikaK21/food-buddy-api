@@ -5,6 +5,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Standardimplementierung des {@code ItemEventPublisher}.
+ *
+ * Benachrichtigt alle registrierten {@code ItemEventListener}.
+ */
 @Component
 public class DefaultItemEventPublisher implements ItemEventPublisher {
 

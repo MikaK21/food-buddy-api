@@ -11,6 +11,15 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST-Controller zur Verwaltung von Speichern (Storages) innerhalb einer Community.
+ *
+ * Bietet Funktionen:
+ * - Erstellen eines neuen Speichers
+ * - Umbenennen eines Speichers
+ * - Löschen eines Speichers
+ * - Auflisten aller Speicher innerhalb einer Community
+ */
 @RestController
 @RequestMapping("/api/storage")
 public class StorageController {
@@ -55,7 +64,6 @@ public class StorageController {
     public ResponseEntity<?> getStoragesForCommunity(@PathVariable Long communityId, Principal principal) {
         List<Storage> storages = storageService.getStoragesForCommunity(communityId, principal.getName());
 
-        // JPA-Entities manuell in DTOs umwandeln
         List<StorageResponseDTO> result = storages.stream()
                 .map(storage -> new StorageResponseDTO(storage.getId(), storage.getName()))
                 .toList();

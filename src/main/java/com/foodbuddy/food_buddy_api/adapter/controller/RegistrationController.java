@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+/**
+ * REST-Controller zur Benutzerregistrierung.
+ *
+ * Bietet einen Endpunkt zur Erstellung eines neuen Benutzers.
+ * Validiert auf doppelte Benutzernamen und E-Mail-Adressen.
+ */
 @RestController
 public class RegistrationController {
 

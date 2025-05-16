@@ -6,6 +6,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für das Value Object {@link Quantity}.
+ *
+ * Testet:
+ * - Erstellung mit gültigen Werten
+ * - Validierung bei negativen Werten und fehlender Einheit
+ */
 class QuantityTest {
 
     @Test

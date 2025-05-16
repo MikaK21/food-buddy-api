@@ -8,6 +8,12 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * DTO für das Erstellen eines neuen Items.
+ *
+ * Enthält alle erforderlichen Felder zur Initialisierung eines Artikels
+ * inklusive Mengenangabe, Barcode, Kategorie, Nährwerte und Verfallsdaten.
+ */
 @Getter
 @Setter
 public class CreateItemRequestDTO {

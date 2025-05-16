@@ -8,6 +8,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST-Controller zur Benutzer-Authentifizierung.
+ *
+ * Prüft Zugangsdaten und gibt bei Erfolg ein JWT-Token zurück.
+ */
 @RestController
 public class AuthenticationController {
 

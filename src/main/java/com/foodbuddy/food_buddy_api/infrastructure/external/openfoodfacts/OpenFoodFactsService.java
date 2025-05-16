@@ -10,6 +10,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Service zur Kommunikation mit der OpenFoodFacts-API.
+ *
+ * Verantwortlich für:
+ * - Aufbau der Anfrage-URL mit Barcode
+ * - Aufruf der API und Fehlerbehandlung
+ * - Mapping der Antwort auf ein internes DTO
+ */
 @Service
 public class OpenFoodFactsService {
 

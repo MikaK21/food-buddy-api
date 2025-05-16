@@ -3,6 +3,9 @@ package com.foodbuddy.food_buddy_api.adapter.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * DTO für Nährwertinformationen eines Produkts.
+ */
 @Getter
 @Setter
 public class NutritionInfoDTO {

@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.util.List;
 
+/**
+ * DTO zur Ausgabe einer vollständigen Einkaufsliste inklusive Items und Mitglieder.
+ */
 @Getter
 @Setter
 public class ShoppingListResponseDTO {

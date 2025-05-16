@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
+/**
+ * DTO zur Darstellung eines Verfallsdatums mit zugehöriger Menge.
+ */
 @Getter
 @Setter
 public class ExpirationDTO {

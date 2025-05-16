@@ -3,7 +3,6 @@ package com.foodbuddy.food_buddy_api.adapter.mapper;
 import com.foodbuddy.food_buddy_api.adapter.dto.*;
 import com.foodbuddy.food_buddy_api.domain.model.Item;
 import com.foodbuddy.food_buddy_api.domain.model.enums.ItemCategory;
-import com.foodbuddy.food_buddy_api.domain.model.enums.ProductGroup;
 import com.foodbuddy.food_buddy_api.domain.model.valueobject.*;
 import com.foodbuddy.food_buddy_api.domain.service.ItemDomainService;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Mapper zur Umwandlung zwischen {@code Item} und den zugehörigen DTOs.
+ *
+ * - Wandelt CreateItemRequestDTO in Item und zurück
+ * - Setzt Nährwertangaben, Verfallsdaten und Mengen korrekt um
+ * - Ermittelt den Verfallsstatus mithilfe des ItemDomainService
+ */
 @Component
 public class ItemMapper {
 

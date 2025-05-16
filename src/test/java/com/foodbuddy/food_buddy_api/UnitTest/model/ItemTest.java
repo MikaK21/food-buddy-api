@@ -10,11 +10,17 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für die {@link Item} Entität.
+ *
+ * Testet:
+ * - Setzen und Abrufen aller Eigenschaften
+ * - Behandlung von Verfallsdaten, Nährwerten und Mengenangaben
+ */
 class ItemTest {
 
     @Test
     void shouldSetAndReturnAllFieldsCorrectly() {
-        // Arrange
         Quantity quantity = new Quantity(2.0, Unit.LITER);
         NutritionInfo nutrition = new NutritionInfo(100, 12.5, 10.0, 5.0, 3.0, 1.5, 0.2, 0);
         LocalDate date1 = LocalDate.of(2025, 5, 1);
@@ -31,7 +37,6 @@ class ItemTest {
         item.addExpiration(2, date1);
         item.addExpiration(1, date2);
 
-        // Assert
         assertEquals(1L, item.getId());
         assertEquals("Joghurt", item.getName());
         assertEquals("Müller", item.getBrand());

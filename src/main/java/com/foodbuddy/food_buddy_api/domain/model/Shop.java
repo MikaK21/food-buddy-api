@@ -4,6 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Entity zur Repräsentation eines Einkaufsgeschäfts.
+ *
+ * Ein Shop gehört einem Benutzer und kann Einkaufslisten-Einträgen zugewiesen werden.
+ */
 @Getter
 @Setter
 @Entity

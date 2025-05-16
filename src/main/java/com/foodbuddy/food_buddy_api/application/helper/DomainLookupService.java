@@ -5,6 +5,13 @@ import com.foodbuddy.food_buddy_api.domain.model.*;
 import com.foodbuddy.food_buddy_api.domain.repository.*;
 import org.springframework.stereotype.Component;
 
+/**
+ * Service zur zentralisierten Auflösung von Domain-Entitäten anhand ihrer IDs.
+ *
+ * - Kapselt Zugriffslogik auf Repositories
+ * - Wirft sprechende Exceptions bei nicht gefundenen Entitäten
+ * - Enthält Prüfungen für Eigentumsrechte (z. B. bei Shops)
+ */
 @Component
 public class DomainLookupService {
 

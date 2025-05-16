@@ -14,6 +14,11 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity zur Repräsentation eines Lagerartikels.
+ *
+ * Enthält Name, Marke, Barcode, Kategorie, Menge, Nährwerte, Verfallsdaten und Zuordnung zu einem Speicher (Storage).
+ */
 @Getter
 @Setter
 @Entity

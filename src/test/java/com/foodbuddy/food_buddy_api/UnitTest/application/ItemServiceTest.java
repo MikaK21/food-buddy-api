@@ -19,6 +19,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+/**
+ * Unit Test für {@link ItemService}.
+ *
+ * Testet:
+ * - Erstellen von Items mit Event-Publishing
+ * - Rechtevalidierung bei Nicht-Mitgliedern
+ * - Aktualisierung eines Items inkl. Storage-Wechsel
+ *
+ * Verwendet Mockito für das Mocking von Repositories und Domain-Logik.
+ */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class ItemServiceTest {

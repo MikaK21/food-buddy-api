@@ -6,6 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit Test für {@link Shop}.
+ *
+ * Testet:
+ * - Erstellung mit Name und zugewiesenem Besitzer
+ */
 class ShopTest {
 
     @Test

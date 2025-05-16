@@ -13,6 +13,15 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST-Controller für die Verwaltung von Einkaufslisten.
+ *
+ * Bietet Funktionen:
+ * - Erstellen und Umbenennen von Einkaufslisten
+ * - Hinzufügen und Entfernen von Mitgliedern
+ * - Hinzufügen, Aktualisieren und Löschen von Listeneinträgen
+ * - Auflisten aller Einkaufslisten des angemeldeten Benutzers
+ */
 @RestController
 @RequestMapping("/api/shopping-list")
 public class ShoppingListController {

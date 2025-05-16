@@ -7,6 +7,11 @@ import jakarta.persistence.Enumerated;
 
 import java.util.Objects;
 
+/**
+ * Value Object zur Darstellung einer Mengenangabe mit Einheit.
+ *
+ * Einheit wird durch das Enum {@code Unit} definiert.
+ */
 @Embeddable
 public class Quantity {
 

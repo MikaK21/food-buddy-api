@@ -8,6 +8,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Entity zur Darstellung einer Einkaufsliste.
+ *
+ * Eine Liste hat einen Leader, Mitglieder und eine Sammlung von Items.
+ * Rechteverwaltung basiert auf Benutzerrolle.
+ */
 @Getter
 @Setter
 @Entity

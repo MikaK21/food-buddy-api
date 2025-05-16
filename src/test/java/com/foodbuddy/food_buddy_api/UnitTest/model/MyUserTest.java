@@ -5,6 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Unit Test für die {@link MyUser} Entität.
+ *
+ * Testet das Setzen und Abrufen von Benutzerattributen.
+ */
 class MyUserTest {
 
     @Test

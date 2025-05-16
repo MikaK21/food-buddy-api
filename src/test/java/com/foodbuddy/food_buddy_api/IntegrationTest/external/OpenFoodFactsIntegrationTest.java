@@ -8,6 +8,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integrationstest für {@link OpenFoodFactsService}.
+ *
+ * Verwendet echten Barcode zur Abfrage der OpenFoodFacts-API.
+ * Testet, ob die Rückgabe ein gültiges {@link ProductDetailDTO} enthält.
+ */
 @SpringBootTest
 class OpenFoodFactsIntegrationTest {
 

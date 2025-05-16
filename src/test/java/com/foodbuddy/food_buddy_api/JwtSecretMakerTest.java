@@ -6,6 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import javax.crypto.SecretKey;
 
+/**
+ * Technischer Test zur Generierung eines JWT Secret Keys.
+ *
+ * Gibt den Key in hexadezimaler Darstellung aus.
+ * Nicht für Produktion oder Unit Tests gedacht.
+ */
 public class JwtSecretMakerTest {
 
     @Test

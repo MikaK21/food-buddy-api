@@ -10,6 +10,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Service für Artikel-Management innerhalb von Speichern (Storage).
+ *
+ * Bietet Funktionen:
+ * - Erstellen, Bearbeiten und Löschen von Artikeln
+ * - Verifizieren der Zugriffsrechte
+ * - Publizieren von Events nach Artikel-Erstellung
+ */
 @Service
 public class ItemService {
 

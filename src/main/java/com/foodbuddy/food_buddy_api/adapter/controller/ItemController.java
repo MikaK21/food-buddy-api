@@ -12,6 +12,16 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * REST-Controller für Artikel (Items) innerhalb eines Speichers (Storage).
+ *
+ * Bietet Funktionen:
+ * - Erstellen eines Artikels mit Mengen- und Nährwertangaben
+ * - Aktualisieren eines bestehenden Artikels
+ * - Löschen eines Artikels
+ * - Auflisten aller Artikel in einem bestimmten Storage
+ * - Anzeigen des Verfallsstatus (OK, WARNING, EXPIRED)
+ */
 @RestController
 @RequestMapping("/api/item")
 public class ItemController {
