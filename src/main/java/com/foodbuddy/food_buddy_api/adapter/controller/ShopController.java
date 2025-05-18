@@ -28,26 +28,25 @@ public class ShopController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createShop(@RequestBody Map<String, String> body, Principal principal) {
-        Shop shop = shopService.createShop(principal.getName(), body.get("name"));
-        return ResponseEntity.ok(Map.of("message", "Shop created", "id", shop.getId()));
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<?> renameShop(@PathVariable Long id, @RequestBody Map<String, String> body, Principal principal) {
-        shopService.renameShop(id, principal.getName(), body.get("name"));
-        return ResponseEntity.ok(Map.of("message", "Shop renamed"));
+    public ResponseEntity<?> createOrAssignShop(@RequestBody Map<String, String> body, Principal principal) {
+        Shop shop = shopService.createOrAssignShop(principal.getName(), body.get("name"));
+        return ResponseEntity.ok(Map.of("message", "Shop created or assigned", "id", shop.getId()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteShop(@PathVariable Long id, Principal principal) {
-        shopService.deleteShop(id, principal.getName());
-        return ResponseEntity.ok(Map.of("message", "Shop deleted"));
+    public ResponseEntity<?> deleteShopAssignment(@PathVariable Long id, Principal principal) {
+        shopService.deleteShopAssignment(id, principal.getName());
+        return ResponseEntity.ok(Map.of("message", "Shop unassigned or deleted"));
     }
 
     @GetMapping("/my")
     public ResponseEntity<?> getMyShops(Principal principal) {
         return ResponseEntity.ok(shopService.getMyShops(principal.getName()));
     }
-}
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllShops() {
+        return ResponseEntity.ok(shopService.getAllShops());
+    }
+
+}

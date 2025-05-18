@@ -34,7 +34,7 @@ public class ItemMapper {
         item.setBarcode(dto.getBarcode());
         item.setCategory(ItemCategory.valueOf(dto.getCategory()));
         item.setQuantity(new Quantity(dto.getQuantityValue(), dto.getQuantityUnit()));
-        item.setProductGroup(itemDomainService.validateProductGroup(item.getCategory(), item.getProductGroup()));
+        item.setProductGroup(itemDomainService.validateProductGroup(item.getCategory(), dto.getProductGroup()));
 
         if (dto.getExpirations() != null) {
             List<ExpirationEntry> expirations = dto.getExpirations().stream()
@@ -65,16 +65,17 @@ public class ItemMapper {
         dto.setQuantityUnit(item.getQuantity().getUnit());
         dto.setProductGroup(item.getProductGroup());
 
-        if (item.getExpirations() != null) {
-            dto.setExpirations(item.getExpirations().stream()
-                    .map(e -> {
-                        ExpirationDTO ex = new ExpirationDTO();
-                        ex.setAmount(e.getAmount());
-                        ex.setExpirationDate(e.getExpirationDate());
-                        return ex;
-                    })
-                    .collect(Collectors.toList()));
-        }
+        LocalDate today = LocalDate.now();
+        List<ExpirationDTO> expirationDTOs = item.getExpirations().stream()
+                .map(e -> {
+                    ExpirationDTO ex = new ExpirationDTO();
+                    ex.setAmount(e.getAmount());
+                    ex.setExpirationDate(e.getExpirationDate());
+                    ex.setStatus(itemDomainService.getStatusForExpiration(item.getProductGroup(), e.getExpirationDate(), today).name());
+                    return ex;
+                })
+                .collect(Collectors.toList());
+        dto.setExpirations(expirationDTOs);
 
         if (item.getNutritionInfo() != null) {
             NutritionInfo n = item.getNutritionInfo();
@@ -97,8 +98,7 @@ public class ItemMapper {
             ));
         }
 
-        dto.setExpirationStatus(itemDomainService.getExpirationStatus(item, LocalDate.now()).name());
-
         return dto;
     }
+
 }

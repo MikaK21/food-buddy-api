@@ -73,10 +73,4 @@ public class DomainLookupService {
         return shoppingListItemRepository.findById(id)
                 .orElseThrow(() -> new ShoppingListItemNotFoundException(id));
     }
-
-    public void checkShopOwnershipOrThrow(Shop shop, String username) {
-        if (!shop.getOwner().getUsername().equals(username)) {
-            throw new ShopPermissionDeniedException(username, shop.getId());
-        }
-    }
 }

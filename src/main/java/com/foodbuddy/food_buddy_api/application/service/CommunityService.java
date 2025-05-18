@@ -4,6 +4,7 @@ import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.domain.model.Community;
 import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import com.foodbuddy.food_buddy_api.domain.repository.CommunityRepository;
+import com.foodbuddy.food_buddy_api.domain.repository.ItemRepository;
 import com.foodbuddy.food_buddy_api.domain.repository.MyUserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -23,11 +24,13 @@ public class CommunityService {
     private final CommunityRepository communityRepository;
     private final MyUserRepository userRepository;
     private final DomainLookupService domainLookupService;
+    private final ItemRepository itemRepository;
 
-    public CommunityService(CommunityRepository communityRepository, MyUserRepository userRepository, DomainLookupService domainLookupService) {
+    public CommunityService(CommunityRepository communityRepository, MyUserRepository userRepository, DomainLookupService domainLookupService, ItemRepository itemRepository) {
         this.communityRepository = communityRepository;
         this.userRepository = userRepository;
         this.domainLookupService = domainLookupService;
+        this.itemRepository = itemRepository;
     }
 
     @Transactional
@@ -57,21 +60,37 @@ public class CommunityService {
         communityRepository.save(community);
     }
 
-    @Transactional
-    public void removeMember(Long communityId, String leaderUsername, String memberUsername) {
-        Community community = domainLookupService.getCommunityOrThrow(communityId);
-        MyUser leader = domainLookupService.getUserOrThrow(memberUsername);
-        MyUser member = domainLookupService.getUserOrThrow(memberUsername);
+//    @Transactional
+//    public void removeMember(Long communityId, String leaderUsername, String memberUsername) {
+//        Community community = domainLookupService.getCommunityOrThrow(communityId);
+//        MyUser leader = domainLookupService.getUserOrThrow(memberUsername);
+//        MyUser member = domainLookupService.getUserOrThrow(memberUsername);
+//
+//        if (!community.isLeader(leader)) {
+//            throw new RuntimeException("Only the leader can remove members.");
+//        }
+//
+//        if (leader.getUsername().equals(member.getUsername())) {
+//            throw new RuntimeException("Leader cannot remove themselves.");
+//        }
+//
+//        community.removeMember(member);
+//        communityRepository.save(community);
+//    }
 
-        if (!community.isLeader(leader)) {
+    @Transactional
+    public void removeMember(Long communityId, String actingUsername, String usernameToRemove) {
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser actingUser = domainLookupService.getUserOrThrow(actingUsername);
+        MyUser userToRemove = domainLookupService.getUserOrThrow(usernameToRemove);
+
+        if (!community.isLeader(actingUser)) {
             throw new RuntimeException("Only the leader can remove members.");
         }
 
-        if (leader.getUsername().equals(member.getUsername())) {
-            throw new RuntimeException("Leader cannot remove themselves.");
-        }
+        community.removeMember(userToRemove);
 
-        community.removeMember(member);
+        // 🔥 DAS FEHLT SONST: persistieren!
         communityRepository.save(community);
     }
 
@@ -115,6 +134,13 @@ public class CommunityService {
             throw new RuntimeException("Only the leader can delete the community.");
         }
 
+        boolean hasItemsInStorage = community.getStorages().stream()
+                .anyMatch(storage -> itemRepository.existsByStorageId(storage.getId()));
+
+        if (hasItemsInStorage) {
+            throw new IllegalStateException("Die Community enthält Lager mit Artikeln und kann nicht gelöscht werden.");
+        }
+
         communityRepository.delete(community);
     }
 
@@ -124,5 +150,18 @@ public class CommunityService {
         return communityRepository.findAll().stream()
                 .filter(c -> c.hasMember(user))
                 .toList();
+    }
+
+    @Transactional
+    public void renameCommunity(Long communityId, String username, String newName) {
+        Community community = domainLookupService.getCommunityOrThrow(communityId);
+        MyUser user = domainLookupService.getUserOrThrow(username);
+
+        if (!community.isLeader(user)) {
+            throw new RuntimeException("Only the leader can rename the community.");
+        }
+
+        community.setName(newName);
+        communityRepository.save(community);
     }
 }

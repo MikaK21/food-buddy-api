@@ -5,6 +5,7 @@ import com.foodbuddy.food_buddy_api.domain.model.Shop;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Spring Data JPA Repository für {@code Shop}.
@@ -13,5 +14,5 @@ import java.util.List;
  */
 public interface ShopRepository extends JpaRepository<Shop, Long> {
 
-    List<Shop> findByOwner(MyUser user);
+    Optional<Shop> findByName(String name);
 }

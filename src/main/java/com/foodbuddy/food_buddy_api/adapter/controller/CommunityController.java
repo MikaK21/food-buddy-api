@@ -1,5 +1,8 @@
 package com.foodbuddy.food_buddy_api.adapter.controller;
 
+import com.foodbuddy.food_buddy_api.adapter.dto.CommunityResponseDTO;
+import com.foodbuddy.food_buddy_api.adapter.dto.StorageResponseDTO;
+import com.foodbuddy.food_buddy_api.adapter.dto.UserResponseDTO;
 import com.foodbuddy.food_buddy_api.application.service.CommunityService;
 import com.foodbuddy.food_buddy_api.domain.model.Community;
 import org.springframework.http.HttpStatus;
@@ -41,6 +44,13 @@ public class CommunityController {
         ));
     }
 
+    @PutMapping("/{id}/rename")
+    public ResponseEntity<?> renameCommunity(@PathVariable Long id, @RequestBody Map<String, String> body, Principal principal) {
+        String newName = body.get("name");
+        communityService.renameCommunity(id, principal.getName(), newName);
+        return ResponseEntity.ok(Map.of("message", "Community renamed successfully"));
+    }
+
     @PutMapping("/{id}/add-member")
     public ResponseEntity<?> addMember(@PathVariable Long id, @RequestBody Map<String, String> body, Principal principal) {
         String newMemberUsername = body.get("username");
@@ -48,12 +58,32 @@ public class CommunityController {
         return ResponseEntity.ok(Map.of("message", "Member added successfully"));
     }
 
+//    @PutMapping("/{id}/remove-member")
+//    public ResponseEntity<?> removeMember(@PathVariable Long id, @RequestBody Map<String, String> body, Principal principal) {
+//        String username = body.get("username");
+//        communityService.removeMember(id, principal.getName(), username);
+//        return ResponseEntity.ok(Map.of("message", "Member removed successfully"));
+//    }
+
     @PutMapping("/{id}/remove-member")
     public ResponseEntity<?> removeMember(@PathVariable Long id, @RequestBody Map<String, String> body, Principal principal) {
         String username = body.get("username");
-        communityService.removeMember(id, principal.getName(), username);
-        return ResponseEntity.ok(Map.of("message", "Member removed successfully"));
+        String actingUsername = principal.getName();
+
+        System.out.println("🔧 REMOVE-MEMBER API");
+        System.out.println("→ acting user (Principal): " + actingUsername);
+        System.out.println("→ target username to remove: " + username);
+
+        try {
+            communityService.removeMember(id, actingUsername, username);
+            return ResponseEntity.ok(Map.of("message", "Member removed successfully"));
+        } catch (RuntimeException e) {
+            // gib exakte Info an Frontend zurück (zum Debuggen)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
+
 
     @PutMapping("/{id}/transfer-leader")
     public ResponseEntity<?> transferLeader(@PathVariable Long id, @RequestBody Map<String, String> body, Principal principal) {
@@ -77,6 +107,33 @@ public class CommunityController {
     @GetMapping("/my")
     public ResponseEntity<?> getMyCommunities(Principal principal) {
         List<Community> communities = communityService.getCommunitiesForUser(principal.getName());
-        return ResponseEntity.ok(communities);
+
+        List<CommunityResponseDTO> response = communities.stream().map(community ->
+                new CommunityResponseDTO(
+                        community.getId(),
+                        community.getName(),
+                        new UserResponseDTO(
+                                community.getLeader().getId(),
+                                community.getLeader().getUsername(),
+                                community.getLeader().getEmail()
+                        ),
+                        community.getMembers().stream().map(m ->
+                                new UserResponseDTO(
+                                        m.getId(),
+                                        m.getUsername(),
+                                        m.getEmail()
+                                )
+                        ).toList(),
+                        community.getStorages().stream().map(s ->
+                                new StorageResponseDTO(
+                                        s.getId(),
+                                        s.getName()
+                                )
+                        ).toList()
+                )
+        ).toList();
+
+        return ResponseEntity.ok(response);
     }
+
 }

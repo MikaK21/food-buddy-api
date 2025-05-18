@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Entity zur Repräsentation eines Einkaufsgeschäfts.
  *
@@ -20,6 +23,6 @@ public class Shop {
 
     private String name;
 
-    @ManyToOne(optional = false)
-    private MyUser owner;
+    @ManyToMany(mappedBy = "shops")
+    private Set<MyUser> users = new HashSet<>();
 }

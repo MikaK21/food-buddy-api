@@ -1,5 +1,7 @@
 package com.foodbuddy.food_buddy_api.application.service;
 
+import com.foodbuddy.food_buddy_api.adapter.dto.ShopDTO;
+import com.foodbuddy.food_buddy_api.adapter.mapper.ShopMapper;
 import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import com.foodbuddy.food_buddy_api.domain.model.Shop;
@@ -26,31 +28,57 @@ public class ShopService {
         this.domainLookupService = domainLookupService;
     }
 
-    public Shop createShop(String username, String name) {
-        MyUser owner = domainLookupService.getUserOrThrow(username);
-        Shop shop = new Shop();
-        shop.setName(name);
-        shop.setOwner(owner);
+    @Transactional
+    public Shop createOrAssignShop(String username, String name) {
+        MyUser user = domainLookupService.getUserOrThrow(username);
 
-        return shopRepository.save(shop);
+        Shop shop = shopRepository.findByName(name).orElseGet(() -> {
+            Shop newShop = new Shop();
+            newShop.setName(name);
+            return shopRepository.save(newShop);
+        });
+
+        // Benutzer zu Shop hinzufügen, wenn noch nicht vorhanden
+        if (!shop.getUsers().contains(user)) {
+            shop.getUsers().add(user);
+        }
+
+        // Umgekehrt auch sicherstellen, dass der Shop dem User zugeordnet ist
+        if (!user.getShops().contains(shop)) {
+            user.getShops().add(shop);
+        }
+
+        return shop;
     }
 
     @Transactional
-    public void renameShop(Long shopId, String username, String newName) {
+    public void deleteShopAssignment(Long shopId, String username) {
+        MyUser user = domainLookupService.getUserOrThrow(username);
         Shop shop = domainLookupService.getShopOrThrow(shopId);
-        domainLookupService.checkShopOwnershipOrThrow(shop, username);
-        shop.setName(newName);
+
+        if (!shop.getUsers().contains(user)) {
+            throw new IllegalStateException("User is not assigned to this shop.");
+        }
+
+        shop.getUsers().remove(user);
+        user.getShops().remove(shop);
+
+        // Optional: Wenn kein User mehr diesen Shop verwendet, löschen
+        if (shop.getUsers().isEmpty()) {
+            shopRepository.delete(shop);
+        }
     }
 
-    public void deleteShop(Long shopId, String username) {
-        Shop shop = domainLookupService.getShopOrThrow(shopId);
-        domainLookupService.checkShopOwnershipOrThrow(shop, username);
-
-        shopRepository.delete(shop);
+    public List<ShopDTO> getMyShops(String username) {
+        MyUser user = domainLookupService.getUserOrThrow(username);
+        return user.getShops().stream()
+                .map(ShopMapper::toDTO)
+                .toList();
     }
 
-    public List<Shop> getMyShops(String username) {
-        return shopRepository.findByOwner(domainLookupService.getUserOrThrow(username));
+    public List<ShopDTO> getAllShops() {
+        return shopRepository.findAll().stream()
+                .map(ShopMapper::toDTO)
+                .toList();
     }
 }
-

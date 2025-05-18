@@ -4,6 +4,7 @@ import com.foodbuddy.food_buddy_api.application.helper.DomainLookupService;
 import com.foodbuddy.food_buddy_api.domain.model.Community;
 import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import com.foodbuddy.food_buddy_api.domain.model.Storage;
+import com.foodbuddy.food_buddy_api.domain.repository.ItemRepository;
 import com.foodbuddy.food_buddy_api.domain.repository.StorageRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,12 @@ public class StorageService {
 
     private final StorageRepository storageRepository;
     private final DomainLookupService domainLookupService;
+    private final ItemRepository itemRepository;
 
-    public StorageService(StorageRepository storageRepository, DomainLookupService domainLookupService) {
+    public StorageService(StorageRepository storageRepository, DomainLookupService domainLookupService, ItemRepository itemRepository) {
         this.storageRepository = storageRepository;
         this.domainLookupService = domainLookupService;
+        this.itemRepository = itemRepository;
     }
 
     @Transactional
@@ -53,8 +56,13 @@ public class StorageService {
             throw new RuntimeException("Only members of the community can delete storages.");
         }
 
+        if (itemRepository.existsByStorageId(storageId)) {
+            throw new IllegalStateException("Storage contains items and cannot be deleted.");
+        }
+
         storageRepository.delete(storage);
     }
+
 
     @Transactional
     public Storage renameStorage(Long storageId, String newName, String username) {

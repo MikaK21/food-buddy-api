@@ -56,6 +56,26 @@ public class ItemController {
         ));
     }
 
+    @PutMapping("/{itemId}/consume")
+    public ResponseEntity<?> consumeItem(
+            @PathVariable Long itemId,
+            @RequestBody Map<String, String> body,
+            Principal principal) {
+        String expirationDateStr = body.get("date");
+        itemService.consumeItem(itemId, expirationDateStr, principal.getName());
+        return ResponseEntity.ok(Map.of("message", "Item marked as consumed"));
+    }
+
+    @PutMapping("/{itemId}/discard")
+    public ResponseEntity<?> discardItem(
+            @PathVariable Long itemId,
+            @RequestBody Map<String, String> body,
+            Principal principal) {
+        String expirationDateStr = body.get("date");
+        itemService.discardItem(itemId, expirationDateStr, principal.getName());
+        return ResponseEntity.ok(Map.of("message", "Item marked as discarded"));
+    }
+
     @DeleteMapping("/{itemId}")
     public ResponseEntity<?> deleteItem(@PathVariable Long itemId, Principal principal) {
         itemService.deleteItem(itemId, principal.getName());
@@ -78,5 +98,21 @@ public class ItemController {
                 .map(itemMapper::toResponseDTO)
                 .toList();
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAllItemsForUser(Principal principal) {
+        List<Item> items = itemService.getAllItemsForUserCommunities(principal.getName());
+        List<ItemResponseDTO> result = items.stream()
+                .map(itemMapper::toResponseDTO)
+                .toList();
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/{itemId}")
+    public ResponseEntity<?> getItemById(@PathVariable Long itemId, Principal principal) {
+        Item item = itemService.getItemById(itemId, principal.getName());
+        ItemResponseDTO dto = itemMapper.toResponseDTO(item);
+        return ResponseEntity.ok(dto);
     }
 }

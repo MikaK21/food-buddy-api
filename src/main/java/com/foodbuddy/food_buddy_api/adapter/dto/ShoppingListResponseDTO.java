@@ -13,8 +13,8 @@ import java.util.List;
 public class ShoppingListResponseDTO {
     private Long id;
     private String name;
-    private String leaderUsername;
-    private List<String> memberUsernames;
+    private UserResponseDTO leader;
+    private List<UserResponseDTO> members;
     private List<ShoppingListItemDTO> items;
 }
 

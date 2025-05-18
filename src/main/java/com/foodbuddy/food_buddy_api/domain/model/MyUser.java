@@ -6,6 +6,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Entity zur Repräsentation eines Benutzers.
  *
@@ -32,4 +35,12 @@ public class MyUser {
     @NotBlank(message = "Email cannot be empty")
     private String email;
 
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_shop",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "shop_id")
+    )
+    private Set<Shop> shops = new HashSet<>();
 }

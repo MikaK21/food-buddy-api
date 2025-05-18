@@ -2,6 +2,7 @@ package com.foodbuddy.food_buddy_api.adapter.mapper;
 
 import com.foodbuddy.food_buddy_api.adapter.dto.ShoppingListItemDTO;
 import com.foodbuddy.food_buddy_api.adapter.dto.ShoppingListResponseDTO;
+import com.foodbuddy.food_buddy_api.adapter.dto.UserResponseDTO;
 import com.foodbuddy.food_buddy_api.domain.model.MyUser;
 import com.foodbuddy.food_buddy_api.domain.model.ShoppingList;
 import com.foodbuddy.food_buddy_api.domain.model.ShoppingListItem;
@@ -20,11 +21,19 @@ public class ShoppingListMapper {
 
         dto.setId(list.getId());
         dto.setName(list.getName());
-        dto.setLeaderUsername(list.getLeader().getUsername());
+        dto.setLeader(new UserResponseDTO(
+                list.getLeader().getId(),
+                list.getLeader().getUsername(),
+                list.getLeader().getEmail()
+        ));
 
-        dto.setMemberUsernames(
+        dto.setMembers(
                 list.getMembers().stream()
-                        .map(MyUser::getUsername)
+                        .map(user -> new UserResponseDTO(
+                                user.getId(),
+                                user.getUsername(),
+                                user.getEmail()
+                        ))
                         .toList()
         );
 

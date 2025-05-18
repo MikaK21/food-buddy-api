@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 public class ExpirationDTO {
-
     private int amount;
     private LocalDate expirationDate;
+    private String status; // NEU
 }

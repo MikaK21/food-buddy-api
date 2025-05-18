@@ -32,5 +32,11 @@ public class MyUserDetailService implements UserDetailsService {
                 .password(user.getPassword())
                 .authorities(Collections.emptyList())
                 .build();
+
+    }
+
+    public MyUser getDomainUserByUsername(String username) {
+        return repository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }
