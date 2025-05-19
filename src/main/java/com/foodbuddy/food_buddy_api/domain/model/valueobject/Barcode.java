@@ -18,7 +18,7 @@ public final class Barcode {
     }
 
     public Barcode(String value) {
-        if (value == null || !value.matches("\\d{8,13}")) {
+        if (!value.isEmpty() && !value.matches("\\d{8,13}")) {
             throw new IllegalArgumentException("Invalid barcode");
         }
         this.value = value;

@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### OCR-Ausnahmen ###
+ocr_base/images_det/
+ocr_base/images_rec/
+ocr_base/results_det/
+ocr_base/results_rec/

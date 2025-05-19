@@ -1,6 +1,5 @@
 package com.foodbuddy.food_buddy_api.infrastructure.external.ocr;
 
-import com.foodbuddy.food_buddy_api.infrastructure.external.ocr.OcrService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
